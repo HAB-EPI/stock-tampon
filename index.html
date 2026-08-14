@@ -2,20 +2,17 @@
 <html lang="fr">
 
 <head>
-
   <meta charset="UTF-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <meta name="theme-color" content="#b91c1c">
 
   <title>Stock Tampon</title>
 
-  <script
-    src="https://unpkg.com/html5-qrcode"
-    type="text/javascript">
-  </script>
-
+  <!-- SCANNER QR / CODE-BARRES -->
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
   <style>
 
@@ -24,52 +21,56 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-
     html,
     body {
       margin: 0;
       padding: 0;
       width: 100%;
       min-height: 100%;
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
       background: #f3f4f6;
       color: #111827;
     }
-
 
     body {
       min-height: 100vh;
     }
 
+    button,
+    input,
+    select {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+
+    /* ==================================================
+       APPLICATION
+    ================================================== */
 
     .application {
       width: 100%;
       max-width: 650px;
       min-height: 100vh;
       margin: 0 auto;
-      background: white;
+      background: #ffffff;
     }
 
 
-    /* =========================
-       ENTETE
-    ========================= */
+    /* ==================================================
+       EN-TÊTE
+    ================================================== */
 
     .entete {
       background: #b91c1c;
       color: white;
-      padding: 22px 18px 20px;
+      padding: 25px 20px 22px;
       text-align: center;
-      position: sticky;
-      top: 0;
-      z-index: 20;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
     }
-
 
     .entete h1 {
       margin: 0;
@@ -77,27 +78,25 @@
       font-weight: 800;
     }
 
-
     .entete p {
-      margin: 6px 0 0;
+      margin: 7px 0 0;
       font-size: 14px;
-      opacity: 0.9;
+      opacity: 0.92;
     }
 
 
-    /* =========================
+    /* ==================================================
        CONTENU
-    ========================= */
+    ================================================== */
 
     .contenu {
-      padding: 22px 16px 35px;
+      padding: 22px 18px 35px;
     }
 
 
     .etape {
       display: none;
     }
-
 
     .etape.active {
       display: block;
@@ -106,39 +105,425 @@
 
     h2 {
       margin: 0 0 8px;
-      font-size: 24px;
+      font-size: 23px;
+      line-height: 1.2;
     }
-
 
     .description {
       margin: 0 0 22px;
       color: #6b7280;
+      line-height: 1.45;
       font-size: 15px;
-      line-height: 1.5;
     }
 
 
-    /* =========================
+    /* ==================================================
+       BOUTONS PRINCIPAUX
+    ================================================== */
+
+    .bouton-principal {
+      width: 100%;
+      border: none;
+      border-radius: 18px;
+      padding: 23px 18px;
+      margin-bottom: 14px;
+      font-size: 18px;
+      font-weight: 800;
+      text-align: left;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+      transition: transform 0.1s;
+    }
+
+    .bouton-principal:active {
+      transform: scale(0.98);
+    }
+
+    .bouton-principal .icone {
+      font-size: 30px;
+      display: block;
+      margin-bottom: 7px;
+    }
+
+    .bouton-principal .titre {
+      display: block;
+      font-size: 18px;
+    }
+
+    .bouton-principal .sous-titre {
+      display: block;
+      margin-top: 5px;
+      font-size: 13px;
+      font-weight: normal;
+      opacity: 0.72;
+    }
+
+    .bouton-prendre {
+      background: #b91c1c;
+      color: white;
+    }
+
+    .bouton-rendre {
+      background: #f3f4f6;
+      color: #111827;
+      border: 2px solid #e5e7eb;
+    }
+
+
+    /* ==================================================
+       CHAMPS
+    ================================================== */
+
+    label.titre-label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    select,
+    input[type="text"] {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      background: white;
+      font-size: 17px;
+      outline: none;
+    }
+
+    select:focus,
+    input[type="text"]:focus {
+      border-color: #b91c1c;
+      box-shadow: 0 0 0 3px rgba(185,28,28,0.12);
+    }
+
+
+    /* ==================================================
+       CARTES EQUIPEMENTS
+    ================================================== */
+
+    .equipements-choix {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .carte-equipement {
+      position: relative;
+    }
+
+    .carte-equipement input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .carte-equipement label {
+      display: block;
+      width: 100%;
+      padding: 18px;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      background: #ffffff;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .carte-equipement input:checked + label {
+      border-color: #b91c1c;
+      background: #fff1f2;
+    }
+
+    .carte-equipement .emoji {
+      font-size: 30px;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+
+    .carte-equipement .nom {
+      font-size: 17px;
+      font-weight: 800;
+      vertical-align: middle;
+    }
+
+    .carte-equipement .sous-nom {
+      display: block;
+      margin-top: 7px;
+      margin-left: 43px;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+
+    /* ==================================================
+       BOUTONS NAVIGATION
+    ================================================== */
+
+    .boutons {
+      display: flex;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    .bouton {
+      border: none;
+      border-radius: 12px;
+      padding: 15px 18px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .precedent {
+      flex: 1;
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .suivant {
+      flex: 2;
+      background: #b91c1c;
+      color: white;
+    }
+
+    .bouton-large {
+      width: 100%;
+    }
+
+
+    /* ==================================================
+       BLOCS IDENTIFICATION
+    ================================================== */
+
+    .bloc-identification {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 15px;
+    }
+
+    .bloc-identification h3 {
+      margin: 0 0 13px;
+      font-size: 17px;
+    }
+
+    .ligne-scan {
+      display: flex;
+      gap: 8px;
+    }
+
+    .ligne-scan input {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .bouton-scan {
+      flex: 0 0 auto;
+      border: none;
+      border-radius: 12px;
+      background: #111827;
+      color: white;
+      padding: 0 17px;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+
+    /* ==================================================
+       SCANNER
+    ================================================== */
+
+    #scanner-zone {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      inset: 0;
+      background: #000000;
+      color: white;
+      overflow-y: auto;
+    }
+
+    .scanner-entete {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      background: #111827;
+    }
+
+    .scanner-entete strong {
+      font-size: 17px;
+    }
+
+    .fermer-scanner {
+      border: none;
+      background: #374151;
+      color: white;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 800;
+    }
+
+    #reader {
+      width: 100%;
+      max-width: 500px;
+      margin: 15px auto;
+      background: #000;
+    }
+
+    .scanner-message {
+      text-align: center;
+      padding: 10px 20px 25px;
+      color: #d1d5db;
+      line-height: 1.45;
+    }
+
+    .scanner-erreur {
+      display: none;
+      margin: 10px 20px;
+      padding: 13px;
+      border-radius: 12px;
+      background: #7f1d1d;
+      color: white;
+      text-align: center;
+    }
+
+
+    /* ==================================================
+       RETOUR - AGENTS
+    ================================================== */
+
+    .liste-agents {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .agent-retour {
+      width: 100%;
+      border: 2px solid #e5e7eb;
+      border-radius: 15px;
+      background: white;
+      padding: 16px;
+      text-align: left;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .agent-retour:active {
+      transform: scale(0.99);
+    }
+
+    .agent-retour .nom-agent {
+      display: block;
+      font-size: 17px;
+    }
+
+    .agent-retour .nombre-equipements {
+      display: block;
+      margin-top: 5px;
+      color: #6b7280;
+      font-size: 13px;
+      font-weight: normal;
+    }
+
+
+    /* ==================================================
+       RETOUR - EQUIPEMENTS
+    ================================================== */
+
+    .info-agent {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 18px;
+    }
+
+    .info-agent strong {
+      display: block;
+      font-size: 18px;
+    }
+
+    .info-agent span {
+      display: block;
+      margin-top: 4px;
+      color: #7f1d1d;
+      font-size: 13px;
+    }
+
+    .liste-retour {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .equipement-retour {
+      position: relative;
+    }
+
+    .equipement-retour input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .equipement-retour label {
+      display: block;
+      padding: 17px;
+      border: 2px solid #e5e7eb;
+      border-radius: 15px;
+      background: white;
+    }
+
+    .equipement-retour input:checked + label {
+      border-color: #16a34a;
+      background: #f0fdf4;
+    }
+
+    .equipement-retour .ligne-haute {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .equipement-retour .emoji {
+      font-size: 27px;
+    }
+
+    .equipement-retour .type {
+      font-weight: 800;
+      font-size: 17px;
+    }
+
+    .equipement-retour .numero {
+      margin-top: 7px;
+      margin-left: 39px;
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+
+    /* ==================================================
        CHARGEMENT
-    ========================= */
+    ================================================== */
 
     .chargement {
       text-align: center;
-      padding: 50px 20px;
+      padding: 35px 20px;
       color: #6b7280;
     }
 
-
     .spinner {
-      width: 40px;
-      height: 40px;
+      width: 35px;
+      height: 35px;
       margin: 0 auto 15px;
       border: 4px solid #e5e7eb;
       border-top-color: #b91c1c;
       border-radius: 50%;
       animation: tourner 0.8s linear infinite;
     }
-
 
     @keyframes tourner {
       to {
@@ -147,365 +532,59 @@
     }
 
 
-    /* =========================
-       AGENT
-    ========================= */
-
-    label.titre-champ {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 700;
-      font-size: 15px;
-    }
-
-
-    select {
-      width: 100%;
-      min-height: 55px;
-      padding: 12px 14px;
-      font-size: 17px;
-      border: 1px solid #d1d5db;
-      border-radius: 12px;
-      background: white;
-      color: #111827;
-      outline: none;
-    }
-
-
-    select:focus {
-      border-color: #b91c1c;
-    }
-
-
-    /* =========================
-       EQUIPMENTS
-    ========================= */
-
-    .equipements-selection {
-      display: flex;
-      flex-direction: column;
-      gap: 13px;
-    }
-
-
-    .equipement-option {
-      position: relative;
-    }
-
-
-    .equipement-option input {
-      position: absolute;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-
-    .equipement-carte {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      width: 100%;
-      min-height: 88px;
-      padding: 15px;
-      border: 2px solid #e5e7eb;
-      border-radius: 16px;
-      background: white;
-      cursor: pointer;
-      transition: 0.15s;
-    }
-
-
-    .equipement-option input:checked + .equipement-carte {
-      border-color: #b91c1c;
-      background: #fff1f2;
-    }
-
-
-    .equipement-emoji {
-      width: 55px;
-      height: 55px;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #f3f4f6;
-      border-radius: 14px;
-      font-size: 31px;
-    }
-
-
-    .equipement-texte {
-      flex: 1;
-    }
-
-
-    .equipement-titre {
-      font-size: 18px;
-      font-weight: 800;
-    }
-
-
-    .equipement-sous-titre {
-      margin-top: 3px;
-      font-size: 13px;
-      color: #6b7280;
-    }
-
-
-    .case-selection {
-      width: 27px;
-      height: 27px;
-      border: 2px solid #d1d5db;
-      border-radius: 8px;
-      flex-shrink: 0;
-      position: relative;
-    }
-
-
-    .equipement-option input:checked
-    + .equipement-carte
-    .case-selection {
-      background: #b91c1c;
-      border-color: #b91c1c;
-    }
-
-
-    .equipement-option input:checked
-    + .equipement-carte
-    .case-selection::after {
-      content: "✓";
-      position: absolute;
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-      left: 4px;
-      top: -1px;
-    }
-
-
-    /* =========================
-       IDENTIFICATION
-    ========================= */
-
-    .equipement-bloc {
-      margin-bottom: 18px;
-      padding: 17px;
-      border: 1px solid #e5e7eb;
-      border-radius: 16px;
-      background: #fafafa;
-    }
-
-
-    .equipement-bloc-titre {
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 12px;
-    }
-
-
-    .champ-scan {
-      display: flex;
-      gap: 9px;
-    }
-
-
-    .champ-numero {
-      flex: 1;
-      min-width: 0;
-      height: 54px;
-      padding: 0 14px;
-      border: 1px solid #d1d5db;
-      border-radius: 12px;
-      font-size: 17px;
-      outline: none;
-      background: white;
-    }
-
-
-    .champ-numero:focus {
-      border-color: #b91c1c;
-    }
-
-
-    .bouton-scan {
-      width: 58px;
-      height: 54px;
-      flex-shrink: 0;
-      border: none;
-      border-radius: 12px;
-      background: #111827;
-      color: white;
-      font-size: 25px;
-      cursor: pointer;
-    }
-
-
-    /* =========================
-       BOUTONS
-    ========================= */
-
-    .boutons {
-      display: flex;
-      gap: 10px;
-      margin-top: 25px;
-    }
-
-
-    button {
-      font-family: inherit;
-      border: none;
-      cursor: pointer;
-    }
-
-
-    .precedent,
-    .suivant,
-    .valider {
-      min-height: 55px;
-      padding: 0 20px;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 800;
-    }
-
-
-    .precedent {
-      flex: 1;
-      background: #e5e7eb;
-      color: #111827;
-    }
-
-
-    .suivant,
-    .valider {
-      flex: 2;
-      background: #b91c1c;
-      color: white;
-    }
-
-
-    .valider {
-      width: 100%;
-      margin-top: 15px;
-    }
-
-
-    button:disabled {
-      opacity: 0.5;
-    }
-
-
-    /* =========================
-       MESSAGES
-    ========================= */
+    /* ==================================================
+       ERREURS / SUCCÈS
+    ================================================== */
 
     .erreur {
       display: none;
-      margin-top: 15px;
-      padding: 13px;
-      border-radius: 11px;
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 12px;
       background: #fee2e2;
       color: #991b1b;
-      font-size: 14px;
       line-height: 1.4;
+      font-size: 14px;
     }
-
 
     .succes {
       display: none;
-      margin-top: 15px;
-      padding: 15px;
-      border-radius: 12px;
-      background: #dcfce7;
+      text-align: center;
+      padding: 30px 15px;
+    }
+
+    .succes .gros-emoji {
+      font-size: 60px;
+      margin-bottom: 12px;
+    }
+
+    .succes h2 {
       color: #166534;
-      text-align: center;
-      font-weight: 700;
     }
 
-
-    /* =========================
-       SCANNER
-    ========================= */
-
-    .scanner-fond {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      background: rgba(0, 0, 0, 0.95);
-      padding: 18px;
-    }
-
-
-    .scanner-fond.active {
-      display: flex;
-      flex-direction: column;
-    }
-
-
-    .scanner-entete {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: white;
-      margin-bottom: 15px;
-    }
-
-
-    .scanner-entete strong {
-      font-size: 19px;
-    }
-
-
-    .fermer-scanner {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.15);
-      color: white;
-      font-size: 25px;
-    }
-
-
-    .scanner-zone {
-      width: 100%;
-      max-width: 500px;
-      margin: auto;
-      background: black;
-      border-radius: 18px;
-      overflow: hidden;
-    }
-
-
-    #reader {
-      width: 100%;
-    }
-
-
-    #reader video {
-      width: 100% !important;
-      height: auto !important;
-    }
-
-
-    .scanner-instruction {
-      color: white;
-      text-align: center;
-      margin: 20px auto;
-      max-width: 400px;
+    .succes p {
+      color: #6b7280;
       line-height: 1.5;
     }
 
 
-    .scanner-erreur {
-      display: none;
-      color: white;
-      background: #991b1b;
-      padding: 13px;
-      border-radius: 10px;
+    /* ==================================================
+       PETIT TEXTE
+    ================================================== */
+
+    .note {
+      margin-top: 12px;
+      color: #6b7280;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .aucun {
       text-align: center;
-      max-width: 500px;
-      margin: 0 auto 15px;
+      padding: 25px 15px;
+      color: #6b7280;
+      background: #f9fafb;
+      border-radius: 15px;
     }
 
   </style>
@@ -519,19 +598,28 @@
 <div class="application">
 
 
-  <header class="entete">
+  <!-- ==================================================
+       EN-TÊTE
+  ================================================== -->
+
+  <div class="entete">
 
     <h1>🚒 STOCK TAMPON</h1>
 
-    <p>Gestion des équipements</p>
+    <p>Gestion des équipements collectifs</p>
 
-  </header>
-
-
-  <main class="contenu">
+  </div>
 
 
-    <div id="chargement" class="chargement">
+  <div class="contenu">
+
+
+    <!-- ==================================================
+         CHARGEMENT
+    ================================================== -->
+
+    <div id="chargement"
+         class="chargement">
 
       <div class="spinner"></div>
 
@@ -540,21 +628,72 @@
     </div>
 
 
-    <!-- =========================
-         ETAPE 1
-    ========================= -->
+    <!-- ==================================================
+         ACCUEIL
+    ================================================== -->
 
-    <section id="etape1" class="etape">
+    <div id="accueil"
+         class="etape">
+
+      <h2>Bienvenue 👋</h2>
+
+      <p class="description">
+        Que souhaitez-vous faire ?
+      </p>
+
+
+      <button
+        class="bouton-principal bouton-prendre"
+        onclick="demarrerPrise()">
+
+        <span class="icone">🧥</span>
+
+        <span class="titre">
+          PRENDRE DU STOCK TAMPON
+        </span>
+
+        <span class="sous-titre">
+          Emprunter une veste, un surpantalon ou des gants
+        </span>
+
+      </button>
+
+
+      <button
+        class="bouton-principal bouton-rendre"
+        onclick="demarrerRetour()">
+
+        <span class="icone">↩️</span>
+
+        <span class="titre">
+          RENDRE DU STOCK TAMPON
+        </span>
+
+        <span class="sous-titre">
+          Restituer les équipements empruntés
+        </span>
+
+      </button>
+
+    </div>
+
+
+    <!-- ==================================================
+         PRISE - AGENT
+    ================================================== -->
+
+    <div id="prise1"
+         class="etape">
 
       <h2>👤 Qui êtes-vous ?</h2>
 
       <p class="description">
-        Sélectionnez votre nom dans la liste.
+        Sélectionnez l'agent qui prend le stock tampon.
       </p>
 
 
       <label
-        class="titre-champ"
+        class="titre-label"
         for="agent">
 
         Agent
@@ -574,8 +713,16 @@
       <div class="boutons">
 
         <button
-          class="suivant"
-          onclick="allerEtape2()">
+          class="bouton precedent"
+          onclick="retourAccueil()">
+
+          RETOUR
+
+        </button>
+
+        <button
+          class="bouton suivant"
+          onclick="priseEtape2()">
 
           SUIVANT
 
@@ -584,140 +731,97 @@
       </div>
 
 
-      <div
-        id="erreur1"
-        class="erreur">
+      <div id="erreur-prise1"
+           class="erreur">
       </div>
 
-    </section>
+    </div>
 
 
-    <!-- =========================
-         ETAPE 2
-    ========================= -->
+    <!-- ==================================================
+         PRISE - EQUIPEMENTS
+    ================================================== -->
 
-    <section id="etape2" class="etape">
+    <div id="prise2"
+         class="etape">
 
       <h2>🧤 Que prenez-vous ?</h2>
 
       <p class="description">
-        Sélectionnez les équipements dont vous avez besoin.
+        Sélectionnez un ou plusieurs équipements.
       </p>
 
 
-      <div class="equipements-selection">
+      <div class="equipements-choix">
 
 
-        <!-- VESTE -->
-
-        <div class="equipement-option">
+        <div class="carte-equipement">
 
           <input
             type="checkbox"
             id="veste">
 
-          <label
-            class="equipement-carte"
-            for="veste">
+          <label for="veste">
 
-            <div class="equipement-emoji">
-              🧥
-            </div>
+            <span class="emoji">🧥</span>
 
+            <span class="nom">
+              Veste
+            </span>
 
-            <div class="equipement-texte">
-
-              <div class="equipement-titre">
-                Veste
-              </div>
-
-              <div class="equipement-sous-titre">
-                Stock tampon – Veste
-              </div>
-
-            </div>
-
-
-            <div class="case-selection"></div>
+            <span class="sous-nom">
+              Stock tampon — Veste
+            </span>
 
           </label>
 
         </div>
 
 
-        <!-- SURPANTALON -->
-
-        <div class="equipement-option">
+        <div class="carte-equipement">
 
           <input
             type="checkbox"
             id="surpantalon">
 
-          <label
-            class="equipement-carte"
-            for="surpantalon">
+          <label for="surpantalon">
 
-            <div class="equipement-emoji">
-              👖
-            </div>
+            <span class="emoji">👖</span>
 
+            <span class="nom">
+              Surpantalon
+            </span>
 
-            <div class="equipement-texte">
-
-              <div class="equipement-titre">
-                Surpantalon
-              </div>
-
-              <div class="equipement-sous-titre">
-                Stock tampon – Surpantalon
-              </div>
-
-            </div>
-
-
-            <div class="case-selection"></div>
+            <span class="sous-nom">
+              Stock tampon — Surpantalon
+            </span>
 
           </label>
 
         </div>
 
 
-        <!-- GANTS -->
-
-        <div class="equipement-option">
+        <div class="carte-equipement">
 
           <input
             type="checkbox"
             id="gants">
 
-          <label
-            class="equipement-carte"
-            for="gants">
+          <label for="gants">
 
-            <div class="equipement-emoji">
-              🧤
-            </div>
+            <span class="emoji">🧤</span>
 
+            <span class="nom">
+              Gants de feu
+            </span>
 
-            <div class="equipement-texte">
-
-              <div class="equipement-titre">
-                Gants de feu
-              </div>
-
-              <div class="equipement-sous-titre">
-                Stock tampon – Gants de feu
-              </div>
-
-            </div>
-
-
-            <div class="case-selection"></div>
+            <span class="sous-nom">
+              Stock tampon — Gants de feu
+            </span>
 
           </label>
 
         </div>
-
 
       </div>
 
@@ -725,17 +829,16 @@
       <div class="boutons">
 
         <button
-          class="precedent"
-          onclick="afficherEtape(1)">
+          class="bouton precedent"
+          onclick="afficherEtape('prise1')">
 
-          PRÉCÉDENT
+          RETOUR
 
         </button>
 
-
         <button
-          class="suivant"
-          onclick="allerEtape3()">
+          class="bouton suivant"
+          onclick="priseEtape3()">
 
           SUIVANT
 
@@ -744,178 +847,313 @@
       </div>
 
 
-      <div
-        id="erreur2"
-        class="erreur">
+      <div id="erreur-prise2"
+           class="erreur">
       </div>
 
-    </section>
+    </div>
 
 
-    <!-- =========================
-         ETAPE 3
-    ========================= -->
+    <!-- ==================================================
+         PRISE - NUMEROS
+    ================================================== -->
 
-    <section id="etape3" class="etape">
+    <div id="prise3"
+         class="etape">
 
       <h2>📦 Identification</h2>
 
-
       <p class="description">
-
-        Saisissez le numéro ou utilisez le scanner.
-
+        Saisissez ou scannez le numéro de chaque équipement.
       </p>
 
 
-      <div id="equipements"></div>
+      <div id="equipements-identification">
+      </div>
 
 
       <div class="boutons">
 
         <button
-          class="precedent"
-          onclick="afficherEtape(2)">
+          class="bouton precedent"
+          onclick="afficherEtape('prise2')">
 
-          PRÉCÉDENT
+          RETOUR
+
+        </button>
+
+        <button
+          id="bouton-valider-prise"
+          class="bouton suivant"
+          onclick="validerPrise()">
+
+          VALIDER
 
         </button>
 
       </div>
 
 
-      <button
-        id="boutonValider"
-        class="valider"
-        onclick="validerStock()">
+      <div id="erreur-prise3"
+           class="erreur">
+      </div>
 
-        ✅ VALIDER
+    </div>
+
+
+    <!-- ==================================================
+         RETOUR - AGENTS
+    ================================================== -->
+
+    <div id="retour1"
+         class="etape">
+
+      <h2>↩️ Rendre du stock tampon</h2>
+
+      <p class="description">
+        Sélectionnez l'agent qui restitue des équipements.
+      </p>
+
+
+      <div id="liste-agents-retour"
+           class="liste-agents">
+
+      </div>
+
+
+      <div class="boutons">
+
+        <button
+          class="bouton precedent bouton-large"
+          onclick="retourAccueil()">
+
+          RETOUR À L'ACCUEIL
+
+        </button>
+
+      </div>
+
+
+      <div id="erreur-retour1"
+           class="erreur">
+      </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         RETOUR - EQUIPEMENTS
+    ================================================== -->
+
+    <div id="retour2"
+         class="etape">
+
+      <h2>📦 Équipements détenus</h2>
+
+      <p class="description">
+        Sélectionnez uniquement les équipements que l'agent rend.
+      </p>
+
+
+      <div id="info-agent-retour"
+           class="info-agent">
+
+      </div>
+
+
+      <div id="liste-retour"
+           class="liste-retour">
+
+      </div>
+
+
+      <div class="boutons">
+
+        <button
+          class="bouton precedent"
+          onclick="afficherEtape('retour1')">
+
+          RETOUR
+
+        </button>
+
+        <button
+          id="bouton-valider-retour"
+          class="bouton suivant"
+          onclick="validerRetour()">
+
+          RENDRE LA SÉLECTION
+
+        </button>
+
+      </div>
+
+
+      <div id="erreur-retour2"
+           class="erreur">
+      </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         SUCCES
+    ================================================== -->
+
+    <div id="succes"
+         class="etape succes">
+
+      <div class="gros-emoji">
+        ✅
+      </div>
+
+      <h2 id="succes-titre">
+        Opération terminée
+      </h2>
+
+      <p id="succes-message">
+        L'opération a été enregistrée.
+      </p>
+
+
+      <button
+        class="bouton suivant bouton-large"
+        onclick="retourAccueil()">
+
+        RETOUR À L'ACCUEIL
 
       </button>
 
-
-      <div
-        id="erreur3"
-        class="erreur">
-      </div>
+    </div>
 
 
-      <div
-        id="succes"
-        class="succes">
-      </div>
-
-    </section>
-
-
-  </main>
+  </div>
 
 </div>
 
 
-<!-- =========================
+<!-- ==================================================
      SCANNER
-========================= -->
+================================================== -->
 
-<div
-  id="scannerFond"
-  class="scanner-fond">
-
+<div id="scanner-zone">
 
   <div class="scanner-entete">
 
     <strong>
-      📷 Scanner le code-barres
+      📷 Scanner le code
     </strong>
-
 
     <button
       class="fermer-scanner"
       onclick="fermerScanner()">
 
-      ×
+      FERMER
 
     </button>
 
   </div>
 
 
-  <div
-    id="scannerErreur"
-    class="scanner-erreur">
+  <div id="reader">
   </div>
 
 
-  <div class="scanner-zone">
-
-    <div id="reader"></div>
-
+  <div id="scanner-erreur"
+       class="scanner-erreur">
   </div>
 
 
-  <div class="scanner-instruction">
+  <div class="scanner-message">
 
-    Placez le code-barres dans le cadre.
+    Placez le code-barres ou QR code
+    dans le cadre.
 
     <br><br>
 
-    Le numéro sera automatiquement renseigné.
+    La caméra arrière de votre téléphone
+    sera utilisée automatiquement.
 
   </div>
-
 
 </div>
 
 
 <script>
 
-
-/* ==================================================
-   ADRESSE DE TON APPS SCRIPT
-================================================== */
+/************************************************************
+ * CONFIGURATION
+ ************************************************************/
 
 var API_URL =
   "https://script.google.com/macros/s/AKfycbzGYgEZm_qLXmQj9T6u8ztp-2uWAUSGZLPIrcLjZL8NvDF69wKpNFq6LLKt6-Hm_cQW/exec";
 
 
-/* ==================================================
-   VARIABLES
-================================================== */
+/************************************************************
+ * VARIABLES
+ ************************************************************/
 
 var agents = [];
 
+var emprunts = [];
+
+var agentSelectionneRetour = null;
+
 var scanner = null;
 
-var champScannerActuel = null;
+var typeEquipementScan = null;
 
 
-/* ==================================================
-   DEMARRAGE
-================================================== */
+/************************************************************
+ * DEMARRAGE
+ ************************************************************/
 
-window.addEventListener(
-  "load",
-  function() {
+window.onload = function() {
 
-    chargerAgents();
+  chargerAgents();
 
-  }
-);
+};
 
 
-/* ==================================================
-   CHARGER LES AGENTS
-================================================== */
+/************************************************************
+ * APPEL API JSONP
+ ************************************************************/
 
-function chargerAgents() {
+function appelerAPI(
+  action,
+  donnees,
+  callback
+) {
+
+  var callbackName =
+    "stockTamponCallback_" +
+    Date.now() +
+    "_" +
+    Math.floor(
+      Math.random() * 100000
+    );
+
 
   var script =
     document.createElement("script");
 
 
-  var callbackName =
-    "recevoirAgents_" +
-    Date.now();
+  var params =
+    "?action=" +
+    encodeURIComponent(action) +
+    "&callback=" +
+    encodeURIComponent(callbackName);
+
+
+  if (donnees) {
+
+    params +=
+      "&donnees=" +
+      encodeURIComponent(
+        JSON.stringify(donnees)
+      );
+
+  }
 
 
   window[callbackName] =
@@ -923,58 +1161,45 @@ function chargerAgents() {
 
       try {
 
-        agents =
-          resultat.agents ||
-          resultat ||
-          [];
+        callback(resultat);
 
+      } finally {
 
-        afficherAgents();
+        delete window[callbackName];
 
-
-        document
-          .getElementById("chargement")
-          .style.display = "none";
-
-
-        afficherEtape(1);
-
-      } catch (erreur) {
-
-        afficherErreurChargement(
-          erreur.message
-        );
+        if (script.parentNode) {
+          script.parentNode.removeChild(script);
+        }
 
       }
 
+    };
+
+
+  script.onerror =
+    function() {
 
       delete window[callbackName];
 
       if (script.parentNode) {
-
-        script.parentNode.removeChild(
-          script
-        );
-
+        script.parentNode.removeChild(script);
       }
+
+      callback({
+
+        success: false,
+
+        message:
+          "Impossible de contacter le serveur."
+
+      });
 
     };
 
 
   script.src =
     API_URL +
-    "?action=getAgents&callback=" +
-    callbackName;
-
-
-  script.onerror =
-    function() {
-
-      afficherErreurChargement(
-        "Impossible de contacter Google Sheets."
-      );
-
-    };
+    params;
 
 
   document
@@ -984,31 +1209,68 @@ function chargerAgents() {
 }
 
 
-/* ==================================================
-   ERREUR CHARGEMENT
-================================================== */
+/************************************************************
+ * CHARGER AGENTS
+ ************************************************************/
 
-function afficherErreurChargement(
-  message
-) {
+function chargerAgents() {
 
-  document
-    .getElementById("chargement")
-    .innerHTML =
-      "<strong>Erreur</strong><br><br>" +
-      message;
+  appelerAPI(
+    "getAgents",
+    null,
+    function(resultat) {
+
+      if (
+        !resultat ||
+        !resultat.success
+      ) {
+
+        afficherChargementErreur(
+          resultat &&
+          resultat.message
+            ? resultat.message
+            : "Impossible de charger les agents."
+        );
+
+        return;
+
+      }
+
+
+      agents =
+        resultat.agents || [];
+
+
+      remplirListeAgents();
+
+
+      document
+        .getElementById("chargement")
+        .style.display = "none";
+
+
+      afficherEtape("accueil");
+
+    }
+  );
 
 }
 
 
-/* ==================================================
-   AFFICHER AGENTS
-================================================== */
+/************************************************************
+ * REMPLIR AGENTS
+ ************************************************************/
 
-function afficherAgents() {
+function remplirListeAgents() {
 
   var select =
     document.getElementById("agent");
+
+
+  select.innerHTML =
+    "<option value=''>" +
+    "Sélectionnez votre nom" +
+    "</option>";
 
 
   for (
@@ -1026,16 +1288,7 @@ function afficherAgents() {
 
 
     option.textContent =
-      agents[i].nomComplet ||
-      (
-        String(
-          agents[i].prenom || ""
-        ) +
-        " " +
-        String(
-          agents[i].nom || ""
-        )
-      ).trim();
+      agents[i].nomComplet;
 
 
     select.appendChild(option);
@@ -1045,16 +1298,14 @@ function afficherAgents() {
 }
 
 
-/* ==================================================
-   AFFICHER ETAPE
-================================================== */
+/************************************************************
+ * AFFICHER ETAPE
+ ************************************************************/
 
-function afficherEtape(numero) {
+function afficherEtape(id) {
 
   var etapes =
-    document.querySelectorAll(
-      ".etape"
-    );
+    document.querySelectorAll(".etape");
 
 
   for (
@@ -1070,15 +1321,13 @@ function afficherEtape(numero) {
   }
 
 
-  var etape =
-    document.getElementById(
-      "etape" + numero
-    );
+  var element =
+    document.getElementById(id);
 
 
-  if (etape) {
+  if (element) {
 
-    etape
+    element
       .classList
       .add("active");
 
@@ -1087,22 +1336,68 @@ function afficherEtape(numero) {
 }
 
 
-/* ==================================================
-   ETAPE 1
-================================================== */
+/************************************************************
+ * ACCUEIL
+ ************************************************************/
 
-function allerEtape2() {
+function retourAccueil() {
 
-  var agent =
+  fermerScanner();
+
+  masquerToutesErreurs();
+
+  afficherEtape("accueil");
+
+}
+
+
+/************************************************************
+ * DEMARRER PRISE
+ ************************************************************/
+
+function demarrerPrise() {
+
+  document
+    .getElementById("agent")
+    .value = "";
+
+
+  document
+    .getElementById("veste")
+    .checked = false;
+
+
+  document
+    .getElementById("surpantalon")
+    .checked = false;
+
+
+  document
+    .getElementById("gants")
+    .checked = false;
+
+
+  afficherEtape("prise1");
+
+}
+
+
+/************************************************************
+ * PRISE ETAPE 2
+ ************************************************************/
+
+function priseEtape2() {
+
+  var agentId =
     document
       .getElementById("agent")
       .value;
 
 
-  if (!agent) {
+  if (!agentId) {
 
     afficherErreur(
-      "erreur1",
+      "erreur-prise1",
       "Veuillez sélectionner votre nom."
     );
 
@@ -1111,18 +1406,18 @@ function allerEtape2() {
   }
 
 
-  cacherErreur("erreur1");
+  masquerErreur("erreur-prise1");
 
-  afficherEtape(2);
+  afficherEtape("prise2");
 
 }
 
 
-/* ==================================================
-   ETAPE 2
-================================================== */
+/************************************************************
+ * PRISE ETAPE 3
+ ************************************************************/
 
-function allerEtape3() {
+function priseEtape3() {
 
   var veste =
     document
@@ -1149,7 +1444,7 @@ function allerEtape3() {
   ) {
 
     afficherErreur(
-      "erreur2",
+      "erreur-prise2",
       "Sélectionnez au moins un équipement."
     );
 
@@ -1158,24 +1453,26 @@ function allerEtape3() {
   }
 
 
-  cacherErreur("erreur2");
+  masquerErreur("erreur-prise2");
 
-  creerChampsEquipements();
 
-  afficherEtape(3);
+  creerChampsIdentification();
+
+
+  afficherEtape("prise3");
 
 }
 
 
-/* ==================================================
-   CREER LES CHAMPS
-================================================== */
+/************************************************************
+ * CREER CHAMPS IDENTIFICATION
+ ************************************************************/
 
-function creerChampsEquipements() {
+function creerChampsIdentification() {
 
   var zone =
     document.getElementById(
-      "equipements"
+      "equipements-identification"
     );
 
 
@@ -1188,11 +1485,10 @@ function creerChampsEquipements() {
       .checked
   ) {
 
-    ajouterEquipement(
+    ajouterChampEquipement(
       zone,
       "VESTE",
-      "🧥",
-      "Numéro de la veste"
+      "🧥"
     );
 
   }
@@ -1204,11 +1500,10 @@ function creerChampsEquipements() {
       .checked
   ) {
 
-    ajouterEquipement(
+    ajouterChampEquipement(
       zone,
       "SURPANTALON",
-      "👖",
-      "Numéro du surpantalon"
+      "👖"
     );
 
   }
@@ -1220,11 +1515,10 @@ function creerChampsEquipements() {
       .checked
   ) {
 
-    ajouterEquipement(
+    ajouterChampEquipement(
       zone,
       "GANTS",
-      "🧤",
-      "Numéro des gants"
+      "🧤"
     );
 
   }
@@ -1232,15 +1526,14 @@ function creerChampsEquipements() {
 }
 
 
-/* ==================================================
-   AJOUTER EQUIPEMENT
-================================================== */
+/************************************************************
+ * AJOUTER CHAMP EQUIPEMENT
+ ************************************************************/
 
-function ajouterEquipement(
+function ajouterChampEquipement(
   zone,
   type,
-  emoji,
-  placeholder
+  emoji
 ) {
 
   var bloc =
@@ -1248,36 +1541,31 @@ function ajouterEquipement(
 
 
   bloc.className =
-    "equipement-bloc";
+    "bloc-identification";
 
 
   bloc.innerHTML =
 
-    "<div class='equipement-bloc-titre'>" +
+    "<h3>" +
       emoji +
       " " +
       type +
-    "</div>" +
+    "</h3>" +
 
-    "<div class='champ-scan'>" +
+    "<div class='ligne-scan'>" +
 
       "<input " +
-        "class='champ-numero' " +
         "type='text' " +
-        "placeholder='" +
-          placeholder +
-        "' " +
+        "class='champ-numero' " +
         "data-type='" +
           type +
-        "'>" +
+        "' " +
+        "placeholder='Numéro de l'équipement'>" +
 
       "<button " +
         "type='button' " +
-        "class='bouton-scan' " +
-        "onclick='ouvrirScanner(this)'>" +
-
-        "📷" +
-
+        "class='bouton-scan'>" +
+        "📷 SCANNER" +
       "</button>" +
 
     "</div>";
@@ -1285,65 +1573,74 @@ function ajouterEquipement(
 
   zone.appendChild(bloc);
 
+
+  var bouton =
+    bloc.querySelector(
+      ".bouton-scan"
+    );
+
+
+  bouton.addEventListener(
+    "click",
+    function() {
+
+      ouvrirScanner(
+        type,
+        bloc.querySelector(
+          ".champ-numero"
+        )
+      );
+
+    }
+  );
+
 }
 
 
-/* ==================================================
-   OUVRIR SCANNER
-================================================== */
+/************************************************************
+ * OUVRIR SCANNER
+ ************************************************************/
 
 function ouvrirScanner(
-  bouton
+  type,
+  champ
 ) {
 
-  var bloc =
-    bouton.closest(
-      ".equipement-bloc"
+  typeEquipementScan =
+    type;
+
+
+  var zone =
+    document.getElementById(
+      "scanner-zone"
     );
 
 
-  champScannerActuel =
-    bloc.querySelector(
-      ".champ-numero"
-    );
+  zone.style.display =
+    "block";
 
 
   document
     .getElementById(
-      "scannerFond"
-    )
-    .classList
-    .add("active");
-
-
-  document
-    .getElementById(
-      "scannerErreur"
+      "scanner-erreur"
     )
     .style.display = "none";
 
 
-  demarrerScanner();
+  document
+    .getElementById(
+      "scanner-erreur"
+    )
+    .innerText = "";
 
-}
 
+  if (scanner) {
 
-/* ==================================================
-   DEMARRER SCANNER
-================================================== */
+    try {
+      scanner.clear();
+    } catch (e) {}
 
-function demarrerScanner() {
-
-  if (
-    typeof Html5Qrcode ===
-    "undefined"
-  ) {
-
-    afficherErreurScanner(
-      "Le scanner n'a pas pu être chargé."
-    );
-
-    return;
+    scanner = null;
 
   }
 
@@ -1354,7 +1651,7 @@ function demarrerScanner() {
     );
 
 
-  var configuration = {
+  var config = {
 
     fps: 10,
 
@@ -1363,8 +1660,7 @@ function demarrerScanner() {
       height: 160
     },
 
-    aspectRatio:
-      1.7777778
+    aspectRatio: 1.777778
 
   };
 
@@ -1373,35 +1669,44 @@ function demarrerScanner() {
     .start(
 
       {
-        facingMode:
-          "environment"
+        facingMode: {
+          exact: "environment"
+        }
       },
 
-      configuration,
+      config,
 
-      function(code) {
+      function(decodedText) {
 
-        codeBarreTrouve(
-          code
-        );
+        champ.value =
+          decodedText;
+
+
+        fermerScanner();
 
       },
 
-      function() {
+      function(errorMessage) {
 
-        // Erreurs normales
-        // de recherche ignorées.
+        /*
+         * Les erreurs de lecture normales
+         * sont ignorées.
+         */
 
       }
 
     )
     .catch(
-      function(erreur) {
+      function(error) {
 
-        afficherErreurScanner(
-          "Caméra inaccessible. " +
-          "Autorisez la caméra pour ce site " +
-          "puis appuyez à nouveau sur Scanner."
+        /*
+         * Certains téléphones/navigateurs
+         * refusent "exact: environment".
+         * On tente alors une deuxième méthode.
+         */
+
+        essayerCameraAlternative(
+          champ
         );
 
       }
@@ -1410,124 +1715,148 @@ function demarrerScanner() {
 }
 
 
-/* ==================================================
-   CODE TROUVE
-================================================== */
+/************************************************************
+ * CAMERA ALTERNATIVE
+ ************************************************************/
 
-function codeBarreTrouve(
-  code
+function essayerCameraAlternative(
+  champ
 ) {
 
-  if (
-    champScannerActuel
-  ) {
+  if (scanner) {
 
-    champScannerActuel.value =
-      code;
+    try {
+      scanner.clear();
+    } catch (e) {}
+
+    scanner = null;
 
   }
 
 
-  fermerScanner();
+  scanner =
+    new Html5Qrcode(
+      "reader"
+    );
+
+
+  var config = {
+
+    fps: 10,
+
+    qrbox: {
+      width: 280,
+      height: 160
+    }
+
+  };
+
+
+  scanner
+    .start(
+
+      {
+        facingMode: "environment"
+      },
+
+      config,
+
+      function(decodedText) {
+
+        champ.value =
+          decodedText;
+
+
+        fermerScanner();
+
+      },
+
+      function(errorMessage) {}
+
+    )
+    .catch(
+      function(error) {
+
+        var message =
+          "Caméra inaccessible. " +
+          "Vérifiez que votre navigateur " +
+          "a bien l'autorisation d'utiliser " +
+          "la caméra et que vous êtes bien " +
+          "sur une connexion HTTPS.";
+
+
+        afficherErreurScanner(
+          message
+        );
+
+      }
+    );
 
 }
 
 
-/* ==================================================
-   FERMER SCANNER
-================================================== */
+/************************************************************
+ * FERMER SCANNER
+ ************************************************************/
 
 function fermerScanner() {
 
   if (scanner) {
 
-    scanner
-      .stop()
-      .then(
-        function() {
+    try {
 
-          scanner.clear();
+      scanner
+        .stop()
+        .then(
+          function() {
 
-          scanner = null;
+            try {
+              scanner.clear();
+            } catch (e) {}
 
-          fermerFenetreScanner();
+            scanner = null;
 
-        }
-      )
-      .catch(
-        function() {
+          }
+        )
+        .catch(
+          function() {
 
-          scanner = null;
+            try {
+              scanner.clear();
+            } catch (e) {}
 
-          fermerFenetreScanner();
+            scanner = null;
 
-        }
-      );
+          }
+        );
 
-  } else {
+    } catch (e) {
 
-    fermerFenetreScanner();
+      try {
+        scanner.clear();
+      } catch (x) {}
+
+      scanner = null;
+
+    }
 
   }
 
-}
-
-
-/* ==================================================
-   FERMER FENETRE
-================================================== */
-
-function fermerFenetreScanner() {
 
   document
     .getElementById(
-      "scannerFond"
+      "scanner-zone"
     )
-    .classList
-    .remove("active");
-
-
-  document
-    .getElementById(
-      "reader"
-    )
-    .innerHTML = "";
-
-
-  champScannerActuel = null;
+    .style.display = "none";
 
 }
 
 
-/* ==================================================
-   ERREUR SCANNER
-================================================== */
+/************************************************************
+ * VALIDATION PRISE
+ ************************************************************/
 
-function afficherErreurScanner(
-  message
-) {
-
-  var zone =
-    document.getElementById(
-      "scannerErreur"
-    );
-
-
-  zone.innerText =
-    message;
-
-
-  zone.style.display =
-    "block";
-
-}
-
-
-/* ==================================================
-   VALIDATION
-================================================== */
-
-function validerStock() {
+function validerPrise() {
 
   var agentId =
     document
@@ -1538,8 +1867,24 @@ function validerStock() {
   if (!agentId) {
 
     afficherErreur(
-      "erreur3",
-      "Agent non renseigné."
+      "erreur-prise3",
+      "Agent non sélectionné."
+    );
+
+    return;
+
+  }
+
+
+  var agent =
+    trouverAgent(agentId);
+
+
+  if (!agent) {
+
+    afficherErreur(
+      "erreur-prise3",
+      "Agent introuvable."
     );
 
     return;
@@ -1549,7 +1894,7 @@ function validerStock() {
 
   var champs =
     document.querySelectorAll(
-      ".champ-numero"
+      "#equipements-identification .champ-numero"
     );
 
 
@@ -1570,15 +1915,18 @@ function validerStock() {
 
     var type =
       champs[i]
-        .dataset
-        .type;
+        .getAttribute(
+          "data-type"
+        );
 
 
     if (!numero) {
 
       afficherErreur(
-        "erreur3",
-        "Veuillez renseigner tous les numéros."
+        "erreur-prise3",
+        "Veuillez renseigner le numéro du " +
+        type +
+        "."
       );
 
       return;
@@ -1597,77 +1945,690 @@ function validerStock() {
   }
 
 
-  /*
-   * Pour l'instant, on affiche simplement
-   * les données préparées.
-   *
-   * La prochaine étape reliera définitivement
-   * cette validation à STOCK et MOUVEMENTS.
-   */
-
-  var agentNom =
-    document
-      .getElementById("agent")
-      .selectedOptions[0]
-      .textContent;
+  var bouton =
+    document.getElementById(
+      "bouton-valider-prise"
+    );
 
 
-  var resume =
-    "Agent : " +
-    agentNom +
-    "\n\n";
+  bouton.disabled =
+    true;
 
 
-  for (
-    var j = 0;
-    j < equipements.length;
-    j++
-  ) {
-
-    resume +=
-      equipements[j].type +
-      " : " +
-      equipements[j].numero +
-      "\n";
-
-  }
+  bouton.innerText =
+    "ENREGISTREMENT...";
 
 
-  afficherSucces(
-    "Équipements renseignés.\n\n" +
-    resume
+  appelerAPI(
+    "prendreStock",
+
+    {
+
+      agentId:
+        agent.id,
+
+      agentNom:
+        agent.nomComplet,
+
+      equipements:
+        equipements
+
+    },
+
+    function(resultat) {
+
+      bouton.disabled =
+        false;
+
+      bouton.innerText =
+        "VALIDER";
+
+
+      if (
+        !resultat ||
+        !resultat.success
+      ) {
+
+        afficherErreur(
+          "erreur-prise3",
+          resultat &&
+          resultat.message
+            ? resultat.message
+            : "Une erreur est survenue."
+        );
+
+        return;
+
+      }
+
+
+      document
+        .getElementById(
+          "succes-titre"
+        )
+        .innerText =
+          "Emprunt enregistré !";
+
+
+      document
+        .getElementById(
+          "succes-message"
+        )
+        .innerText =
+          "Le stock tampon a bien été attribué à " +
+          agent.nomComplet +
+          ".";
+
+
+      afficherEtape("succes");
+
+    }
   );
 
 }
 
 
-/* ==================================================
-   SUCCES
-================================================== */
+/************************************************************
+ * DEMARRER RETOUR
+ ************************************************************/
 
-function afficherSucces(
-  message
-) {
+function demarrerRetour() {
+
+  afficherEtape("retour1");
+
 
   var zone =
     document.getElementById(
-      "succes"
+      "liste-agents-retour"
     );
 
 
-  zone.innerText =
-    "✅ " + message;
+  zone.innerHTML =
+    "<div class='chargement'>" +
+      "<div class='spinner'></div>" +
+      "Recherche des équipements prêtés..." +
+    "</div>";
 
 
-  zone.style.display =
-    "block";
+  chargerEmprunts();
 
 }
 
 
-/* ==================================================
-   ERREUR
-================================================== */
+/************************************************************
+ * CHARGER EMPRUNTS
+ ************************************************************/
+
+function chargerEmprunts() {
+
+  appelerAPI(
+    "getEmprunts",
+    null,
+    function(resultat) {
+
+      if (
+        !resultat ||
+        !resultat.success
+      ) {
+
+        afficherErreur(
+          "erreur-retour1",
+          resultat &&
+          resultat.message
+            ? resultat.message
+            : "Impossible de charger les emprunts."
+        );
+
+        return;
+
+      }
+
+
+      emprunts =
+        resultat.emprunts || [];
+
+
+      afficherAgentsAvecEmprunts();
+
+    }
+  );
+
+}
+
+
+/************************************************************
+ * AFFICHER AGENTS AVEC EMPRUNTS
+ ************************************************************/
+
+function afficherAgentsAvecEmprunts() {
+
+  var zone =
+    document.getElementById(
+      "liste-agents-retour"
+    );
+
+
+  zone.innerHTML = "";
+
+
+  var groupes = {};
+
+
+  for (
+    var i = 0;
+    i < emprunts.length;
+    i++
+  ) {
+
+    var emprunt =
+      emprunts[i];
+
+
+    var cle =
+      emprunt.agentId ||
+      emprunt.agentNom;
+
+
+    if (!groupes[cle]) {
+
+      groupes[cle] = {
+
+        agentId:
+          emprunt.agentId,
+
+        agentNom:
+          emprunt.agentNom,
+
+        equipements: []
+
+      };
+
+    }
+
+
+    groupes[cle]
+      .equipements
+      .push(emprunt);
+
+  }
+
+
+  var cles =
+    Object.keys(groupes);
+
+
+  if (!cles.length) {
+
+    zone.innerHTML =
+      "<div class='aucun'>" +
+        "✅ Aucun équipement n'est actuellement prêté." +
+      "</div>";
+
+    return;
+
+  }
+
+
+  for (
+    var j = 0;
+    j < cles.length;
+    j++
+  ) {
+
+    var groupe =
+      groupes[cles[j]];
+
+
+    var bouton =
+      document.createElement("button");
+
+
+    bouton.className =
+      "agent-retour";
+
+
+    bouton.innerHTML =
+
+      "<span class='nom-agent'>" +
+
+        "👤 " +
+        escapeHtml(
+          groupe.agentNom ||
+          "Agent"
+        ) +
+
+      "</span>" +
+
+      "<span class='nombre-equipements'>" +
+
+        groupe.equipements.length +
+        " équipement(s) en stock tampon" +
+
+      "</span>";
+
+
+    bouton.onclick =
+      (function(g) {
+
+        return function() {
+
+          afficherEquipementsRetour(
+            g
+          );
+
+        };
+
+      })(groupe);
+
+
+    zone.appendChild(
+      bouton
+    );
+
+  }
+
+}
+
+
+/************************************************************
+ * AFFICHER EQUIPEMENTS RETOUR
+ ************************************************************/
+
+function afficherEquipementsRetour(
+  groupe
+) {
+
+  agentSelectionneRetour =
+    groupe;
+
+
+  document
+    .getElementById(
+      "info-agent-retour"
+    )
+    .innerHTML =
+
+      "<strong>" +
+        "👤 " +
+        escapeHtml(
+          groupe.agentNom
+        ) +
+      "</strong>" +
+
+      "<span>" +
+        "Sélectionnez les équipements à restituer." +
+      "</span>";
+
+
+  var zone =
+    document.getElementById(
+      "liste-retour"
+    );
+
+
+  zone.innerHTML = "";
+
+
+  for (
+    var i = 0;
+    i < groupe.equipements.length;
+    i++
+  ) {
+
+    var equipement =
+      groupe.equipements[i];
+
+
+    var id =
+      "retour_" +
+      i;
+
+
+    var emoji =
+      obtenirEmoji(
+        equipement.type
+      );
+
+
+    var bloc =
+      document.createElement("div");
+
+
+    bloc.className =
+      "equipement-retour";
+
+
+    bloc.innerHTML =
+
+      "<input " +
+
+        "type='checkbox' " +
+
+        "id='" +
+          id +
+        "' " +
+
+        "data-index='" +
+          i +
+        "'>" +
+
+      "<label for='" +
+        id +
+      "'>" +
+
+        "<div class='ligne-haute'>" +
+
+          "<span class='emoji'>" +
+            emoji +
+          "</span>" +
+
+          "<span class='type'>" +
+            escapeHtml(
+              afficherType(
+                equipement.type
+              )
+            ) +
+          "</span>" +
+
+        "</div>" +
+
+        "<div class='numero'>" +
+
+          "N° " +
+          escapeHtml(
+            equipement.numero
+          ) +
+
+        "</div>" +
+
+      "</label>";
+
+
+    zone.appendChild(
+      bloc
+    );
+
+  }
+
+
+  afficherEtape("retour2");
+
+}
+
+
+/************************************************************
+ * VALIDATION RETOUR
+ ************************************************************/
+
+function validerRetour() {
+
+  if (!agentSelectionneRetour) {
+
+    afficherErreur(
+      "erreur-retour2",
+      "Aucun agent sélectionné."
+    );
+
+    return;
+
+  }
+
+
+  var cases =
+    document.querySelectorAll(
+      "#liste-retour input[type='checkbox']:checked"
+    );
+
+
+  if (!cases.length) {
+
+    afficherErreur(
+      "erreur-retour2",
+      "Sélectionnez au moins un équipement à rendre."
+    );
+
+    return;
+
+  }
+
+
+  var equipements = [];
+
+
+  for (
+    var i = 0;
+    i < cases.length;
+    i++
+  ) {
+
+    var index =
+      parseInt(
+        cases[i]
+          .getAttribute(
+            "data-index"
+          ),
+        10
+      );
+
+
+    equipements.push(
+      agentSelectionneRetour
+        .equipements[index]
+    );
+
+  }
+
+
+  var bouton =
+    document.getElementById(
+      "bouton-valider-retour"
+    );
+
+
+  bouton.disabled =
+    true;
+
+
+  bouton.innerText =
+    "ENREGISTREMENT...";
+
+
+  appelerAPI(
+    "rendreStock",
+
+    {
+
+      agentId:
+        agentSelectionneRetour.agentId,
+
+      equipements:
+        equipements
+
+    },
+
+    function(resultat) {
+
+      bouton.disabled =
+        false;
+
+      bouton.innerText =
+        "RENDRE LA SÉLECTION";
+
+
+      if (
+        !resultat ||
+        !resultat.success
+      ) {
+
+        afficherErreur(
+          "erreur-retour2",
+          resultat &&
+          resultat.message
+            ? resultat.message
+            : "Une erreur est survenue."
+        );
+
+        return;
+
+      }
+
+
+      document
+        .getElementById(
+          "succes-titre"
+        )
+        .innerText =
+          "Retour enregistré !";
+
+
+      document
+        .getElementById(
+          "succes-message"
+        )
+        .innerText =
+          "Les équipements sélectionnés de " +
+          agentSelectionneRetour.agentNom +
+          " sont maintenant disponibles.";
+
+
+      afficherEtape("succes");
+
+    }
+  );
+
+}
+
+
+/************************************************************
+ * TROUVER AGENT
+ ************************************************************/
+
+function trouverAgent(id) {
+
+  for (
+    var i = 0;
+    i < agents.length;
+    i++
+  ) {
+
+    if (
+      String(
+        agents[i].id
+      ) === String(id)
+    ) {
+
+      return agents[i];
+
+    }
+
+  }
+
+
+  return null;
+
+}
+
+
+/************************************************************
+ * EMOJI
+ ************************************************************/
+
+function obtenirEmoji(type) {
+
+  var valeur =
+    String(
+      type || ""
+    )
+    .toUpperCase();
+
+
+  if (
+    valeur.indexOf(
+      "VESTE"
+    ) !== -1
+  ) {
+
+    return "🧥";
+
+  }
+
+
+  if (
+    valeur.indexOf(
+      "SURPANTALON"
+    ) !== -1
+  ) {
+
+    return "👖";
+
+  }
+
+
+  if (
+    valeur.indexOf(
+      "GANT"
+    ) !== -1
+  ) {
+
+    return "🧤";
+
+  }
+
+
+  return "📦";
+
+}
+
+
+/************************************************************
+ * NOM TYPE
+ ************************************************************/
+
+function afficherType(type) {
+
+  var valeur =
+    String(
+      type || ""
+    )
+    .toUpperCase();
+
+
+  if (
+    valeur === "VESTE"
+  ) {
+
+    return "Veste";
+
+  }
+
+
+  if (
+    valeur === "SURPANTALON"
+  ) {
+
+    return "Surpantalon";
+
+  }
+
+
+  if (
+    valeur === "GANTS" ||
+    valeur === "GANT"
+  ) {
+
+    return "Gants de feu";
+
+  }
+
+
+  return type;
+
+}
+
+
+/************************************************************
+ * ERREUR
+ ************************************************************/
 
 function afficherErreur(
   id,
@@ -1675,8 +2636,105 @@ function afficherErreur(
 ) {
 
   var element =
+    document.getElementById(id);
+
+
+  if (!element) {
+    return;
+  }
+
+
+  element.innerText =
+    message;
+
+
+  element.style.display =
+    "block";
+
+}
+
+
+/************************************************************
+ * MASQUER ERREUR
+ ************************************************************/
+
+function masquerErreur(id) {
+
+  var element =
+    document.getElementById(id);
+
+
+  if (element) {
+
+    element.style.display =
+      "none";
+
+  }
+
+}
+
+
+/************************************************************
+ * MASQUER TOUTES LES ERREURS
+ ************************************************************/
+
+function masquerToutesErreurs() {
+
+  var erreurs =
+    document.querySelectorAll(
+      ".erreur"
+    );
+
+
+  for (
+    var i = 0;
+    i < erreurs.length;
+    i++
+  ) {
+
+    erreurs[i]
+      .style
+      .display = "none";
+
+  }
+
+}
+
+
+/************************************************************
+ * ERREUR CHARGEMENT
+ ************************************************************/
+
+function afficherChargementErreur(
+  message
+) {
+
+  var zone =
     document.getElementById(
-      id
+      "chargement"
+    );
+
+
+  zone.innerHTML =
+    "<div style='padding:20px;color:#991b1b;'>" +
+      "❌ " +
+      escapeHtml(message) +
+    "</div>";
+
+}
+
+
+/************************************************************
+ * ERREUR SCANNER
+ ************************************************************/
+
+function afficherErreurScanner(
+  message
+) {
+
+  var element =
+    document.getElementById(
+      "scanner-erreur"
     );
 
 
@@ -1690,18 +2748,27 @@ function afficherErreur(
 }
 
 
-function cacherErreur(
-  id
+/************************************************************
+ * ECHAPPEMENT HTML
+ ************************************************************/
+
+function escapeHtml(
+  texte
 ) {
 
-  var element =
-    document.getElementById(
-      id
+  var div =
+    document.createElement(
+      "div"
     );
 
 
-  element.style.display =
-    "none";
+  div.textContent =
+    texte == null
+      ? ""
+      : String(texte);
+
+
+  return div.innerHTML;
 
 }
 
